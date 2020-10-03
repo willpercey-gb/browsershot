@@ -1,4 +1,7 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+// add stealth plugin and use defaults (all evasion techniques)
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+puppeteer.use(StealthPlugin());
 const fs = require('fs');
 const URL = require('url').URL;
 const URLParse = require('url').parse;
@@ -42,27 +45,28 @@ const callChrome = async pup => {
     let page;
     let output;
     let remoteInstance;
-	const puppet = (pup || puppeteer);
+    const puppet = (pup || puppeteer);
 
     try {
-        if (request.options.remoteInstanceUrl || request.options.browserWSEndpoint ) {
+        if (request.options.remoteInstanceUrl || request.options.browserWSEndpoint) {
             // default options
             let options = {
                 ignoreHTTPSErrors: request.options.ignoreHttpsErrors
             };
 
             // choose only one method to connect to the browser instance
-            if ( request.options.remoteInstanceUrl ) {
+            if (request.options.remoteInstanceUrl) {
                 options.browserURL = request.options.remoteInstanceUrl;
-            } else if ( request.options.browserWSEndpoint ) {
+            } else if (request.options.browserWSEndpoint) {
                 options.browserWSEndpoint = request.options.browserWSEndpoint;
             }
 
             try {
-                browser = await puppet.connect( options );
+                browser = await puppet.connect(options);
 
                 remoteInstance = true;
-            } catch (exception) { /** does nothing. fallbacks to launching a chromium instance */}
+            } catch (exception) { /** does nothing. fallbacks to launching a chromium instance */
+            }
         }
 
         if (!browser) {
@@ -102,7 +106,7 @@ const callChrome = async pup => {
             var domainsArray = JSON.parse(request.options.blockDomains);
             page.on('request', request => {
                 const hostname = URLParse(request.url()).hostname;
-                domainsArray.forEach(function(value){
+                domainsArray.forEach(function (value) {
                     if (hostname.indexOf(value) >= 0) request.abort();
                 });
                 request.continue();
@@ -112,7 +116,7 @@ const callChrome = async pup => {
         if (request.options && request.options.blockUrls) {
             var urlsArray = JSON.parse(request.options.blockUrls);
             page.on('request', request => {
-                urlsArray.forEach(function(value){
+                urlsArray.forEach(function (value) {
                     if (request.url().indexOf(value) >= 0) request.abort();
                 });
                 request.continue();
@@ -267,7 +271,7 @@ const callChrome = async pup => {
 };
 
 if (require.main === module) {
-	callChrome();
+    callChrome();
 }
 
 exports.callChrome = callChrome;
