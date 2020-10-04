@@ -263,15 +263,19 @@ const callChrome = async pup => {
         console.error(exception);
 
         if (exception.type === 'ElementNotFound') {
+            puppet.close();
             process.exit(2);
         }
 
+        puppet.close();
         process.exit(1);
     }
 };
 
 if (require.main === module) {
-    callChrome();
+    callChrome().then(r => {
+        puppeteer.close();
+    });
 }
 
 exports.callChrome = callChrome;
