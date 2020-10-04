@@ -1,16 +1,16 @@
 <?php
 
-namespace Spatie\Browsershot;
+namespace UWebPro\Browsershot;
 
-use Spatie\Browsershot\Exceptions\CouldNotTakeBrowsershot;
-use Spatie\Browsershot\Exceptions\ElementNotFound;
+use UWebPro\Browsershot\Exceptions\CouldNotTakeBrowsershot;
+use UWebPro\Browsershot\Exceptions\ElementNotFound;
 use Spatie\Image\Image;
 use Spatie\Image\Manipulations;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-/** @mixin \Spatie\Image\Manipulations */
+
 class Browsershot
 {
     protected $nodeBinary = null;
@@ -65,7 +65,7 @@ class Browsershot
 
         $this->imageManipulations = new Manipulations();
 
-        if (! $deviceEmulate) {
+        if (!$deviceEmulate) {
             $this->windowSize(800, 600);
         }
     }
@@ -114,7 +114,7 @@ class Browsershot
 
     public function useCookies(array $cookies, string $domain = null)
     {
-        if (! count($cookies)) {
+        if (!count($cookies)) {
             return $this;
         }
 
@@ -303,7 +303,7 @@ class Browsershot
     {
         $this->screenshotType = $type;
 
-        if (! is_null($quality)) {
+        if (!is_null($quality)) {
             $this->screenshotQuality = $quality;
         }
 
@@ -333,10 +333,10 @@ class Browsershot
     public function margins(float $top, float $right, float $bottom, float $left, string $unit = 'mm')
     {
         return $this->setOption('margin', [
-            'top' => $top.$unit,
-            'right' => $right.$unit,
-            'bottom' => $bottom.$unit,
-            'left' => $left.$unit,
+            'top' => $top . $unit,
+            'right' => $right . $unit,
+            'bottom' => $bottom . $unit,
+            'left' => $left . $unit,
         ]);
     }
 
@@ -380,8 +380,8 @@ class Browsershot
     public function paperSize(float $width, float $height, string $unit = 'mm')
     {
         return $this
-            ->setOption('width', $width.$unit)
-            ->setOption('height', $height.$unit);
+            ->setOption('width', $width . $unit)
+            ->setOption('height', $height . $unit);
     }
 
     // paper format
@@ -488,11 +488,11 @@ class Browsershot
 
         $this->cleanupTemporaryHtmlFile();
 
-        if (! file_exists($targetPath)) {
+        if (!file_exists($targetPath)) {
             throw CouldNotTakeBrowsershot::chromeOutputEmpty($targetPath);
         }
 
-        if (! $this->imageManipulations->isEmpty()) {
+        if (!$this->imageManipulations->isEmpty()) {
             $this->applyManipulations($targetPath);
         }
     }
@@ -544,7 +544,7 @@ class Browsershot
 
         $this->cleanupTemporaryHtmlFile();
 
-        if (! file_exists($targetPath)) {
+        if (!file_exists($targetPath)) {
             throw CouldNotTakeBrowsershot::chromeOutputEmpty($targetPath);
         }
     }
@@ -594,7 +594,7 @@ class Browsershot
 
         $command = $this->createCommand($url, 'screenshot', $options);
 
-        if (! $this->showScreenshotBackground) {
+        if (!$this->showScreenshotBackground) {
             $command['options']['omitBackground'] = true;
         }
 
@@ -641,7 +641,7 @@ class Browsershot
     {
         // assuring that ip and port does actually contains a value
         if ($ip && $port) {
-            $this->setOption('remoteInstanceUrl', 'http://'.$ip.':'.$port);
+            $this->setOption('remoteInstanceUrl', 'http://' . $ip . ':' . $port);
         }
 
         return $this;
@@ -649,7 +649,7 @@ class Browsershot
 
     public function setWSEndpoint(string $endpoint): self
     {
-        if (! is_null($endpoint)) {
+        if (!is_null($endpoint)) {
             $this->setOption('browserWSEndpoint', $endpoint);
         }
 
@@ -672,7 +672,7 @@ class Browsershot
         }
 
         if ($this->proxyServer) {
-            $args[] = '--proxy-server='.$this->proxyServer;
+            $args[] = '--proxy-server=' . $this->proxyServer;
         }
 
         return $args;
@@ -684,7 +684,7 @@ class Browsershot
 
         $command['options']['args'] = $this->getOptionArgs();
 
-        if (! empty($this->additionalOptions)) {
+        if (!empty($this->additionalOptions)) {
             $command['options'] = array_merge_recursive($command['options'], $this->additionalOptions);
         }
 
@@ -749,13 +749,13 @@ class Browsershot
     {
         $nodeBinary = $this->nodeBinary ?: 'node';
 
-        $binPath = $this->binPath ?: __DIR__.'/../bin/browser.js';
+        $binPath = $this->binPath ?: __DIR__ . '/../bin/browser.js';
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $fullCommand =
-                $nodeBinary.' '
-                .escapeshellarg($binPath).' '
-                .'"'.str_replace('"', '\"', (json_encode($command))).'"';
+                $nodeBinary . ' '
+                . escapeshellarg($binPath) . ' '
+                . '"' . str_replace('"', '\"', (json_encode($command))) . '"';
 
             return escapeshellcmd($fullCommand);
         }
@@ -767,11 +767,11 @@ class Browsershot
         $optionsCommand = $this->getOptionsCommand(json_encode($command));
 
         return
-            $setIncludePathCommand.' '
-            .$setNodePathCommand.' '
-            .$nodeBinary.' '
-            .escapeshellarg($binPath).' '
-            .$optionsCommand;
+            $setIncludePathCommand . ' '
+            . $setNodePathCommand . ' '
+            . $nodeBinary . ' '
+            . escapeshellarg($binPath) . ' '
+            . $optionsCommand;
     }
 
     protected function getNodePathCommand(string $nodeBinary): string
@@ -811,7 +811,7 @@ class Browsershot
             // If the key doesn't exist at this depth, we will just create an empty array
             // to hold the next value, allowing us to create the arrays to hold final
             // values at the correct depth. Then we'll keep digging into the array.
-            if (! isset($array[$key]) || ! is_array($array[$key])) {
+            if (!isset($array[$key]) || !is_array($array[$key])) {
                 $array[$key] = [];
             }
 

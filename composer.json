@@ -34,7 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\Browsershot\\": "src"
+            "UWebPro\\Browsershot\\": "src"
         }
     },
     "autoload-dev": {

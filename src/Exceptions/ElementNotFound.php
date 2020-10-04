@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Browsershot\Exceptions;
+namespace UWebPro\Browsershot\Exceptions;
 
 use Exception;
 
